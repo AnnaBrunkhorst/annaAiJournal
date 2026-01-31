@@ -3,6 +3,43 @@
   const entryForm = document.getElementById("entry-form");
   const entryTextarea = document.getElementById("entry");
   const responseEl = document.getElementById("response");
+  const recentEntriesEl = document.getElementById("recent-entries");
+
+  function renderRecentEntries(entries) {
+    if (!entries || entries.length === 0) {
+      recentEntriesEl.textContent = "No entries yet.";
+      return;
+    }
+    const reversed = [...entries].reverse();
+    recentEntriesEl.innerHTML = reversed
+      .map(function (entry) {
+        const date = entry.timestamp
+          ? new Date(entry.timestamp).toLocaleString()
+          : "";
+        const text = (entry.text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        return (
+          '<article class="recent-entry-item">' +
+          '<time class="recent-entry-time">' + date + "</time>" +
+          '<p class="recent-entry-text">' + text + "</p>" +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
+  function loadRecentEntries() {
+    fetch("/journal/recent")
+      .then(function (res) {
+        if (!res.ok) throw new Error("Couldn't load entries");
+        return res.json();
+      })
+      .then(function (data) {
+        renderRecentEntries(data.recentEntries || []);
+      })
+      .catch(function () {
+        recentEntriesEl.textContent = "Couldn't load entries.";
+      });
+  }
 
   // Load prompt on page load
   fetch("/journal/prompt")
@@ -16,6 +53,8 @@
     .catch(function () {
       promptEl.textContent = "Couldn't load prompt.";
     });
+
+  loadRecentEntries();
 
   // Submit entry
   entryForm.addEventListener("submit", function (e) {
@@ -66,6 +105,8 @@
             if (data && data.prompt) promptEl.textContent = data.prompt;
           })
           .catch(function () {});
+
+        loadRecentEntries();
       })
       .catch(function () {
         responseEl.textContent = "Something went wrong. Try again.";
