@@ -41,20 +41,31 @@
         const analysis = data.analysis;
         if (!analysis) {
           responseEl.textContent = data.message || "Entry saved.";
-          return;
+        } else {
+          const parts = [];
+          if (analysis.sentiment) {
+            parts.push("Sentiment: " + analysis.sentiment);
+          }
+          if (analysis.themes && analysis.themes.length) {
+            parts.push("Themes: " + analysis.themes.join(", "));
+          }
+          if (analysis.summary) {
+            parts.push(analysis.summary);
+          }
+          responseEl.innerHTML = parts.join("<br><br>");
+          entryTextarea.value = "";
         }
-        const parts = [];
-        if (analysis.sentiment) {
-          parts.push("Sentiment: " + analysis.sentiment);
-        }
-        if (analysis.themes && analysis.themes.length) {
-          parts.push("Themes: " + analysis.themes.join(", "));
-        }
-        if (analysis.summary) {
-          parts.push(analysis.summary);
-        }
-        responseEl.innerHTML = parts.join("<br><br>");
-        entryTextarea.value = "";
+
+        // Refresh prompt so next session is context-aware
+        fetch("/journal/prompt")
+          .then(function (res) {
+            if (!res.ok) return;
+            return res.json();
+          })
+          .then(function (data) {
+            if (data && data.prompt) promptEl.textContent = data.prompt;
+          })
+          .catch(function () {});
       })
       .catch(function () {
         responseEl.textContent = "Something went wrong. Try again.";
