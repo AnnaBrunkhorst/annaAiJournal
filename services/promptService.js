@@ -6,17 +6,20 @@ function formatDate(timestamp) {
   return isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 10);
 }
 
+function extractFirstSentence(text) {
+  const trimmed = (text || "").trim();
+  if (!trimmed) return trimmed;
+  const match = trimmed.match(/^[^.?!]*[.?!]/);
+  return match ? match[0].trim() : trimmed;
+}
+
 function buildTaskPrompt(recentEntries) {
-  const outputRule =
-    "Output ONLY the question itself. No preamble, no explanation, no quotation marks, no references to these instructions or to prior text.";
   const now = new Date();
   const currentDate = formatDate(now);
 
   if (recentEntries.length === 0) {
     return (
-      "Generate a single empathetic journaling question for someone writing their first entry. " +
-      "Keep it brief and welcoming. " +
-      outputRule
+      "Write one empathetic journaling question for a first-time writer. One sentence only, ending with ?."
     );
   }
 
@@ -32,11 +35,8 @@ function buildTaskPrompt(recentEntries) {
     .join("\n\n");
 
   return (
-    "Based on these recent journal entries, generate a single empathetic follow-up question to encourage reflection. " +
-    "Consider when each entry was written relative to today: if the last entry was days or weeks ago, refer to it as 'the other day' or 'a while ago' rather than 'today', or gently shift to a related or fresh topic instead of assuming recent continuity. " +
-    "Keep it brief and conversational. " +
-    outputRule +
-    "\n\nCurrent date: " +
+    "Write one empathetic follow-up question based on these entries. One sentence only, ending with ?. " +
+    "If entries are old, say 'the other day' not 'today'.\n\nCurrent date: " +
     currentDate +
     "\n\nRecent entries:\n" +
     excerpts
@@ -92,7 +92,7 @@ module.exports = {
       const taskPrompt = buildTaskPrompt(recentEntries);
       const result = await aiClient.generateText(taskPrompt);
       if (typeof result === "string" && result.trim()) {
-        return { prompt: result.trim(), source: "ai" };
+        return { prompt: extractFirstSentence(result.trim()), source: "ai" };
       }
       return { prompt: generateRuleBasedPrompt(recentEntries), source: "fallback" };
     } catch (err) {
