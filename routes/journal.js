@@ -3,6 +3,7 @@ const router = express.Router();
 const analysisService = require("../services/analysisService");
 const storageService = require("../services/storageService");
 const promptService = require("../services/promptService");
+const reflectionService = require("../services/reflectionService");
 
 router.get("/prompt", async (req, res) => {
     const noContext = req.query.stub === "1";
@@ -32,6 +33,18 @@ router.post("/", async (req, res) => {
 router.get("/recent", (req, res) => {
   const recentEntries = storageService.getRecentEntries(10);
   res.json({ count: recentEntries.length, recentEntries });
+});
+
+router.get("/weekly-reflection", async (req, res) => {
+  try {
+    const entries = storageService.getEntriesFromPastDays(7);
+    const reflection = await reflectionService.generateWeeklyReflection(entries);
+    res.json({ reflection });
+  } catch (err) {
+    res.status(500).json({
+      reflection: "Couldn't generate reflection. Please try again."
+    });
+  }
 });
 
 router.delete("/entries", (req, res) => {

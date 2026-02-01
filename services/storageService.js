@@ -44,6 +44,16 @@ module.exports = {
     return entries.slice(-limit);
   },
 
+  getEntriesFromPastDays(days) {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - days);
+    cutoff.setHours(0, 0, 0, 0);
+    return entries.filter(function (e) {
+      const d = e.timestamp ? new Date(e.timestamp) : null;
+      return d && d >= cutoff;
+    });
+  },
+
   clearAllEntries() {
     entries = [];
     writeToFile();

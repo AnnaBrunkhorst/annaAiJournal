@@ -2,6 +2,7 @@
   const promptEl = document.getElementById("prompt");
   const entryForm = document.getElementById("entry-form");
   const entryTextarea = document.getElementById("entry");
+  const weeklyReflectionEl = document.getElementById("weekly-reflection");
   const recentEntriesEl = document.getElementById("recent-entries");
 
   function renderRecentEntries(entries) {
@@ -70,6 +71,22 @@
 
   document.getElementById("stub-prompt").addEventListener("click", function () {
     loadPrompt(true);
+  });
+
+  document.getElementById("generate-reflection").addEventListener("click", function () {
+    weeklyReflectionEl.textContent = "Loading…";
+    fetch("/journal/weekly-reflection")
+      .then(function (res) {
+        if (!res.ok) throw new Error("Couldn't generate reflection");
+        return res.json();
+      })
+      .then(function (data) {
+        const text = (data.reflection || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        weeklyReflectionEl.innerHTML = text.replace(/\n/g, "<br>");
+      })
+      .catch(function () {
+        weeklyReflectionEl.textContent = "Couldn't generate reflection. Please try again.";
+      });
   });
 
   document.getElementById("clear-entries").addEventListener("click", function () {
