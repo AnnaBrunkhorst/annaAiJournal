@@ -9,8 +9,10 @@ function formatDate(timestamp) {
 function extractFirstSentence(text) {
   const trimmed = (text || "").trim();
   if (!trimmed) return trimmed;
-  const match = trimmed.match(/^[^.?!]*[.?!]/);
-  return match ? match[0].trim() : trimmed;
+  const questionMatch = trimmed.match(/^[^?]*\?/);
+  if (questionMatch) return questionMatch[0].trim();
+  const sentenceMatch = trimmed.match(/^[^.!]*[.!]/);
+  return sentenceMatch ? sentenceMatch[0].trim() : trimmed;
 }
 
 function buildTaskPrompt(recentEntries) {
@@ -35,7 +37,7 @@ function buildTaskPrompt(recentEntries) {
     .join("\n\n");
 
   return (
-    "Write one empathetic follow-up question based on these entries. One sentence only, ending with ?. " +
+    "ONE SENTENCE TOTAL. Write one empathetic follow-up question based on these entries. One sentence only, ending with ?. " +
     "If entries are old, say 'the other day' not 'today'.\n\nCurrent date: " +
     currentDate +
     "\n\nRecent entries:\n" +
