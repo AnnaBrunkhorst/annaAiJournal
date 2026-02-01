@@ -46,6 +46,12 @@
       });
   }
 
+  const disclaimerEl = document.getElementById("ai-disclaimer");
+
+  function setDisclaimerVisible(visible) {
+    disclaimerEl.style.display = visible ? "block" : "none";
+  }
+
   function loadPrompt(noContext) {
     promptEl.textContent = "Loading prompt…";
     const url = noContext ? "/journal/prompt?stub=1" : "/journal/prompt";
@@ -56,9 +62,11 @@
       })
       .then(function (data) {
         promptEl.textContent = data.prompt || "How are you feeling right now?";
+        setDisclaimerVisible(data.source === "fallback");
       })
       .catch(function () {
         promptEl.textContent = "Couldn't load prompt.";
+        setDisclaimerVisible(true);
       });
   }
 

@@ -43,6 +43,14 @@ function buildTaskPrompt(recentEntries) {
   );
 }
 
+const FALLBACK_PROMPTS = [
+  "Looking back on today, what stands out most for you?",
+  "What's on your mind right now?",
+  "Is there something you'd like to reflect on today?",
+  "How has your day been so far?",
+  "What would you like to write about?"
+];
+
 function generateRuleBasedPrompt(recentEntries) {
   if (recentEntries.length === 0) {
     return "How are you feeling right now? You don't need to write much — even one sentence is enough.";
@@ -58,7 +66,20 @@ function generateRuleBasedPrompt(recentEntries) {
     return "How did work show up for you today — what felt hardest, and what felt manageable?";
   }
 
-  return "Looking back on today, what stands out most for you?";
+  if (/happy|joy|joyful|grateful|glad|good|great|excited|relieved/.test(lastEntry)) {
+    return "You seemed to have a positive moment recently. What made it feel that way, and could you savor or share it somehow?";
+  }
+
+  if (/tired|sleep|exhausted|rest/.test(lastEntry)) {
+    return "You mentioned rest or fatigue. How are you taking care of yourself today?";
+  }
+
+  if (/family|friend|relationship|partner/.test(lastEntry)) {
+    return "You wrote about relationships. Is there something you'd like to explore or appreciate about that?";
+  }
+
+  const idx = Math.floor(Math.random() * FALLBACK_PROMPTS.length);
+  return FALLBACK_PROMPTS[idx];
 }
 
 module.exports = {
@@ -66,11 +87,12 @@ module.exports = {
     try {
       const taskPrompt = buildTaskPrompt(recentEntries);
       const result = await aiClient.generateText(taskPrompt);
-      return typeof result === "string" && result.trim()
-        ? result.trim()
-        : generateRuleBasedPrompt(recentEntries);
+      if (typeof result === "string" && result.trim()) {
+        return { prompt: result.trim(), source: "ai" };
+      }
+      return { prompt: generateRuleBasedPrompt(recentEntries), source: "fallback" };
     } catch (err) {
-      return generateRuleBasedPrompt(recentEntries);
+      return { prompt: generateRuleBasedPrompt(recentEntries), source: "fallback" };
     }
   }
 };

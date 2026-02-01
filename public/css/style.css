@@ -22,6 +22,16 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
+.ai-disclaimer {
+  font-size: 0.875rem;
+  color: #666;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
 h2 {
   font-size: 1rem;
   font-weight: 600;

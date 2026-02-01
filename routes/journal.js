@@ -8,8 +8,8 @@ const reflectionService = require("../services/reflectionService");
 router.get("/prompt", async (req, res) => {
     const noContext = req.query.stub === "1";
     const recentEntries = noContext ? [] : storageService.getRecentEntries(5);
-    const prompt = await promptService.generatePrompt(recentEntries);
-    res.json({ prompt });
+    const { prompt, source } = await promptService.generatePrompt(recentEntries);
+    res.json({ prompt, source });
   });  
 
 router.post("/", async (req, res) => {
