@@ -1,4 +1,5 @@
 const express = require("express");
+const { spawn } = require("child_process");
 const router = express.Router();
 const analysisService = require("../services/analysisService");
 const storageService = require("../services/storageService");
@@ -50,6 +51,73 @@ router.get("/weekly-reflection", async (req, res) => {
 router.delete("/entries", (req, res) => {
   storageService.clearAllEntries();
   res.status(200).json({ message: "All entries cleared." });
+});
+
+function sleep(ms) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, ms);
+  });
+}
+
+function checkOllamaReachable() {
+  const base = process.env.OLLAMA_BASE || "http://localhost:11434";
+  return fetch(`${base}/api/tags`)
+    .then(function (res) {
+      return res.ok;
+    })
+    .catch(function () {
+      return false;
+    });
+}
+
+router.post("/reconnect", async (req, res) => {
+  try {
+    const reachable = await checkOllamaReachable();
+    if (reachable) {
+      return res.json({ ok: true });
+    }
+
+    const child = spawn("ollama", ["serve"], { detached: true, stdio: "ignore" });
+    child.unref();
+
+    const spawnError = await new Promise(function (resolve) {
+      child.on("error", function (err) {
+        resolve(err);
+      });
+      child.on("spawn", function () {
+        resolve(null);
+      });
+    });
+
+    if (spawnError) {
+      if (spawnError.code === "ENOENT") {
+        return res.json({
+          ok: false,
+          error: "Ollama not found. Install from ollama.com and ensure it's in PATH."
+        });
+      }
+      return res.json({
+        ok: false,
+        error: spawnError.message || "Could not start Ollama."
+      });
+    }
+
+    await sleep(2500);
+    const nowReachable = await checkOllamaReachable();
+    if (nowReachable) {
+      return res.json({ ok: true });
+    }
+
+    return res.json({
+      ok: false,
+      error: "Ollama did not start in time. Install from ollama.com and start it manually."
+    });
+  } catch (err) {
+    return res.json({
+      ok: false,
+      error: err.message || "Could not reconnect to Ollama."
+    });
+  }
 });
 
 module.exports = router;

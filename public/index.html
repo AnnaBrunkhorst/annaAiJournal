@@ -9,7 +9,11 @@
 <body>
   <main>
     <h1>AI-Powered Journal Companion</h1>
-    <div id="ai-disclaimer" class="ai-disclaimer" style="display: none;">AI assistant is not connected. Prompts are not currently being dynamically generated.</div>
+    <div id="ai-disclaimer" class="ai-disclaimer" style="display: none;">
+      <span id="disclaimer-text">AI assistant is not connected. Prompts are not currently being dynamically generated.</span>
+      <span id="disclaimer-error" class="disclaimer-error" style="display: none;"></span>
+      <button type="button" id="reconnect-ollama" class="reconnect-btn">Reconnect</button>
+    </div>
 
     <section class="prompt-section">
       <h2>Today's prompt</h2>

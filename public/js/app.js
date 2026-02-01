@@ -47,9 +47,14 @@
   }
 
   const disclaimerEl = document.getElementById("ai-disclaimer");
+  const disclaimerErrorEl = document.getElementById("disclaimer-error");
 
   function setDisclaimerVisible(visible) {
-    disclaimerEl.style.display = visible ? "block" : "none";
+    disclaimerEl.style.display = visible ? "flex" : "none";
+    if (visible) {
+      disclaimerErrorEl.style.display = "none";
+      disclaimerErrorEl.textContent = "";
+    }
   }
 
   function loadPrompt(noContext) {
@@ -79,6 +84,38 @@
 
   document.getElementById("stub-prompt").addEventListener("click", function () {
     loadPrompt(true);
+  });
+
+  document.getElementById("reconnect-ollama").addEventListener("click", function () {
+    const btn = this;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Reconnecting…";
+    disclaimerErrorEl.style.display = "none";
+    disclaimerErrorEl.textContent = "";
+    fetch("/journal/reconnect", { method: "POST" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("Request failed");
+        return res.json();
+      })
+      .then(function (data) {
+        if (data.ok) {
+          loadPrompt();
+        } else {
+          disclaimerErrorEl.textContent =
+            data.error || "Couldn't start Ollama. Install from ollama.com and start it manually.";
+          disclaimerErrorEl.style.display = "block";
+        }
+      })
+      .catch(function () {
+        disclaimerErrorEl.textContent =
+          "Couldn't start Ollama. Install from ollama.com and start it manually.";
+        disclaimerErrorEl.style.display = "block";
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      });
   });
 
   document.getElementById("generate-reflection").addEventListener("click", function () {
