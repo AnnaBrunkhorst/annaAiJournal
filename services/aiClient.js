@@ -4,7 +4,8 @@
  */
 
 const OLLAMA_BASE = process.env.OLLAMA_BASE || "http://localhost:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3.2";
+// phi3:mini is fast and small; override with OLLAMA_MODEL (e.g. mistral)
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "phi3:mini";
 
 /**
  * Generate text from a prompt using Ollama.
