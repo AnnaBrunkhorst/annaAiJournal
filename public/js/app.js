@@ -63,6 +63,14 @@
   loadPrompt();
   loadRecentEntries();
 
+  document.getElementById("regenerate-prompt").addEventListener("click", function () {
+    loadPrompt();
+  });
+
+  document.getElementById("stub-prompt").addEventListener("click", function () {
+    // STUB: different implementation coming soon
+  });
+
   document.getElementById("clear-entries").addEventListener("click", function () {
     fetch("/journal/entries", { method: "DELETE" })
       .then(function (res) {

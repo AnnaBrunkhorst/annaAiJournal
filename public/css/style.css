@@ -42,6 +42,27 @@ h2 {
   min-height: 3rem;
 }
 
+.prompt-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.prompt-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.prompt-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
 #entry {
   width: 100%;
   padding: 1rem;
