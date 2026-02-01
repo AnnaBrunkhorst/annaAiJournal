@@ -66,6 +66,10 @@ function generateRuleBasedPrompt(recentEntries) {
     return "How did work show up for you today — what felt hardest, and what felt manageable?";
   }
 
+  if (/sad|upset|depress|down|lonely|blue|grief|grieving|miserable/.test(lastEntry)) {
+    return "You mentioned feeling low recently. Is there a small thing today that felt okay, or someone you could reach out to?";
+  }
+
   if (/happy|joy|joyful|grateful|glad|good|great|excited|relieved/.test(lastEntry)) {
     return "You seemed to have a positive moment recently. What made it feel that way, and could you savor or share it somehow?";
   }
