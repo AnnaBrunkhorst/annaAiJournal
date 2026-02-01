@@ -2,7 +2,6 @@
   const promptEl = document.getElementById("prompt");
   const entryForm = document.getElementById("entry-form");
   const entryTextarea = document.getElementById("entry");
-  const responseEl = document.getElementById("response");
   const recentEntriesEl = document.getElementById("recent-entries");
 
   function renderRecentEntries(entries) {
@@ -68,7 +67,6 @@
       .then(function () {
         loadPrompt();
         loadRecentEntries();
-        responseEl.textContent = "Your reflection will appear here.";
       })
       .catch(function () {
         recentEntriesEl.textContent = "Couldn't clear entries.";
@@ -80,11 +78,8 @@
     e.preventDefault();
     const value = entryTextarea.value.trim();
     if (!value) {
-      responseEl.textContent = "Please write something.";
       return;
     }
-
-    responseEl.textContent = "Saving…";
 
     fetch("/journal", {
       method: "POST",
@@ -95,32 +90,13 @@
         if (!res.ok) throw new Error("Request failed");
         return res.json();
       })
-      .then(function (data) {
-        const analysis = data.analysis;
-        if (!analysis) {
-          responseEl.textContent = data.message || "Entry saved.";
-        } else {
-          const parts = [];
-          if (analysis.sentiment) {
-            parts.push("Sentiment: " + analysis.sentiment);
-          }
-          if (analysis.themes && analysis.themes.length) {
-            parts.push("Themes: " + analysis.themes.join(", "));
-          }
-          if (analysis.summary) {
-            parts.push(analysis.summary);
-          }
-          responseEl.innerHTML = parts.join("<br><br>");
-          entryTextarea.value = "";
-        }
-
-        // Refresh prompt so next session is context-aware
+      .then(function () {
+        entryTextarea.value = "";
         loadPrompt();
-
         loadRecentEntries();
       })
       .catch(function () {
-        responseEl.textContent = "Something went wrong. Try again.";
+        // Silent fail - entry may still have been saved
       });
   });
 })();
