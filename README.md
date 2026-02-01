@@ -66,12 +66,8 @@ No database, cloud services, or auth libraries.
 git clone https://github.com/AnnaBrunkhorst/annaAiJournal.git
 cd annaAiJournal
 npm install
-npm run dev
-```
-
-**For AI use:**
-```bash
 ollama pull phi3:mini
+npm run dev
 ```
 
 **Accessing:**
