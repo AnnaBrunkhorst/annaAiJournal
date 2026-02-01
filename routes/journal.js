@@ -33,5 +33,9 @@ router.get("/recent", (req, res) => {
   res.json({ count: recentEntries.length, recentEntries });
 });
 
+router.delete("/entries", (req, res) => {
+  storageService.clearAllEntries();
+  res.status(200).json({ message: "All entries cleared." });
+});
 
 module.exports = router;

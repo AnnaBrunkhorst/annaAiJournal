@@ -59,6 +59,22 @@
   loadPrompt();
   loadRecentEntries();
 
+  document.getElementById("clear-entries").addEventListener("click", function () {
+    fetch("/journal/entries", { method: "DELETE" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("Couldn't clear entries");
+        return res.json();
+      })
+      .then(function () {
+        loadPrompt();
+        loadRecentEntries();
+        responseEl.textContent = "Your reflection will appear here.";
+      })
+      .catch(function () {
+        recentEntriesEl.textContent = "Couldn't clear entries.";
+      });
+  });
+
   // Submit entry
   entryForm.addEventListener("submit", function (e) {
     e.preventDefault();

@@ -103,3 +103,19 @@ h2 {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+.clear-entries-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.clear-entries-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
