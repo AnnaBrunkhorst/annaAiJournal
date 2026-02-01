@@ -75,7 +75,7 @@ ollama pull phi3:mini
 
 Open http://localhost:3000 in your browser.
 
-**Environment (optional):** `OLLAMA_BASE`, `OLLAMA_MODEL`
+**Environment (optional):** You can pull other Ollama models (e.g. `ollama pull mistral`) and set `OLLAMA_MODEL` to use them. Otherwise, `ollama pull phi3:mini` is enough as that's the default model the app expects. Set `OLLAMA_BASE` only if Ollama runs on a different host or port.
 
 ---
 
