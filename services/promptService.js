@@ -21,7 +21,7 @@ function buildTaskPrompt(recentEntries) {
 
   if (recentEntries.length === 0) {
     return (
-      "Write one empathetic journaling question for a first-time writer. One sentence only, ending with ?."
+      "Write one empathetic journaling question for a new user. One sentence only, ending with ?."
     );
   }
 
