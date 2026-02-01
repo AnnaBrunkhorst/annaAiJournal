@@ -41,19 +41,22 @@
       });
   }
 
-  // Load prompt on page load
-  fetch("/journal/prompt")
-    .then(function (res) {
-      if (!res.ok) throw new Error("Couldn't load prompt");
-      return res.json();
-    })
-    .then(function (data) {
-      promptEl.textContent = data.prompt || "How are you feeling right now?";
-    })
-    .catch(function () {
-      promptEl.textContent = "Couldn't load prompt.";
-    });
+  function loadPrompt() {
+    promptEl.textContent = "Loading prompt…";
+    fetch("/journal/prompt")
+      .then(function (res) {
+        if (!res.ok) throw new Error("Couldn't load prompt");
+        return res.json();
+      })
+      .then(function (data) {
+        promptEl.textContent = data.prompt || "How are you feeling right now?";
+      })
+      .catch(function () {
+        promptEl.textContent = "Couldn't load prompt.";
+      });
+  }
 
+  loadPrompt();
   loadRecentEntries();
 
   // Submit entry
@@ -96,15 +99,7 @@
         }
 
         // Refresh prompt so next session is context-aware
-        fetch("/journal/prompt")
-          .then(function (res) {
-            if (!res.ok) return;
-            return res.json();
-          })
-          .then(function (data) {
-            if (data && data.prompt) promptEl.textContent = data.prompt;
-          })
-          .catch(function () {});
+        loadPrompt();
 
         loadRecentEntries();
       })
