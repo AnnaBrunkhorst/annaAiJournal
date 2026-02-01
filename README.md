@@ -63,7 +63,7 @@ No database, cloud services, or auth libraries.
 
 **Setup:**
 ```bash
-git clone <repo-url>
+git clone https://github.com/AnnaBrunkhorst/annaAiJournal.git
 cd annaAiJournal
 npm install
 npm run dev
