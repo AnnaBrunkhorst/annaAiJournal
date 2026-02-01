@@ -159,11 +159,34 @@ h2 {
   border: 1px solid #e0e0e0;
 }
 
+.recent-entry-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
 .recent-entry-time {
-  display: block;
   font-size: 0.875rem;
   color: #666;
-  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.recent-entry-delete {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8125rem;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.recent-entry-delete:hover {
+  background: #f0f0f0;
+  color: #333;
 }
 
 .recent-entry-prompt {

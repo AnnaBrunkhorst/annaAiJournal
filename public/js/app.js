@@ -5,6 +5,10 @@
   const weeklyReflectionEl = document.getElementById("weekly-reflection");
   const recentEntriesEl = document.getElementById("recent-entries");
 
+  function escapeAttr(s) {
+    return (s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
   function renderRecentEntries(entries) {
     if (!entries || entries.length === 0) {
       recentEntriesEl.textContent = "No entries yet.";
@@ -21,9 +25,15 @@
         const promptBlock = promptText
           ? '<p class="recent-entry-prompt">' + promptText + "</p>"
           : "";
+        const idAttr = entry.id ? ' data-entry-id="' + escapeAttr(entry.id) + '"' : "";
+        const deleteBtn =
+          '<button type="button" class="recent-entry-delete"' + idAttr + ">Delete</button>";
         return (
           '<article class="recent-entry-item">' +
+          '<div class="recent-entry-header">' +
           '<time class="recent-entry-time">' + date + "</time>" +
+          deleteBtn +
+          "</div>" +
           promptBlock +
           '<p class="recent-entry-text">' + text + "</p>" +
           "</article>"
@@ -146,6 +156,25 @@
       })
       .catch(function () {
         recentEntriesEl.textContent = "Couldn't clear entries.";
+      });
+  });
+
+  recentEntriesEl.addEventListener("click", function (e) {
+    const btn = e.target.closest(".recent-entry-delete");
+    if (!btn) return;
+    const entryId = btn.getAttribute("data-entry-id");
+    if (!entryId) return;
+    fetch("/journal/entries/" + encodeURIComponent(entryId), { method: "DELETE" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("Couldn't delete entry");
+        return res.json();
+      })
+      .then(function () {
+        loadRecentEntries();
+      })
+      .catch(function () {
+        recentEntriesEl.textContent = "Couldn't delete entry.";
+        loadRecentEntries();
       });
   });
 

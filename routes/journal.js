@@ -48,6 +48,14 @@ router.get("/weekly-reflection", async (req, res) => {
   }
 });
 
+router.delete("/entries/:id", (req, res) => {
+  const removed = storageService.deleteEntry(req.params.id);
+  if (!removed) {
+    return res.status(404).json({ error: "Entry not found." });
+  }
+  res.status(200).json({ message: "Entry deleted." });
+});
+
 router.delete("/entries", (req, res) => {
   storageService.clearAllEntries();
   res.status(200).json({ message: "All entries cleared." });
