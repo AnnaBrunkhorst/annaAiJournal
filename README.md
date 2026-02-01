@@ -59,7 +59,7 @@ No database, cloud services, or auth libraries.
 
 ## Getting Started
 
-**Prerequisites:** Node.js (v18+), [Ollama](https://ollama.com) (optional; the app works without it)
+**Prerequisites:** Node.js (v18+), [Ollama](https://ollama.com) (somewhat optional; the app works without it but prompts will be static and rule-based)
 
 ```bash
 git clone <repo-url>
