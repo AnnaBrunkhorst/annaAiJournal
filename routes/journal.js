@@ -4,10 +4,9 @@ const analysisService = require("../services/analysisService");
 const storageService = require("../services/storageService");
 const promptService = require("../services/promptService");
 
-router.get("/prompt", (req, res) => {
+router.get("/prompt", async (req, res) => {
     const recentEntries = storageService.getRecentEntries(5);
-    const prompt = promptService.generatePrompt(recentEntries);
-  
+    const prompt = await promptService.generatePrompt(recentEntries);
     res.json({ prompt });
   });  
 
