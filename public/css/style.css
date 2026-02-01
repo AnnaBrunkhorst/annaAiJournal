@@ -89,6 +89,13 @@ h2 {
   margin-bottom: 0.5rem;
 }
 
+.recent-entry-prompt {
+  font-size: 0.875rem;
+  color: #555;
+  font-style: italic;
+  margin: 0 0 0.5rem 0;
+}
+
 .recent-entry-text {
   margin: 0;
   white-space: pre-wrap;

@@ -15,10 +15,15 @@
         const date = entry.timestamp
           ? new Date(entry.timestamp).toLocaleString()
           : "";
+        const promptText = (entry.prompt || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const text = (entry.text || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const promptBlock = promptText
+          ? '<p class="recent-entry-prompt">' + promptText + "</p>"
+          : "";
         return (
           '<article class="recent-entry-item">' +
           '<time class="recent-entry-time">' + date + "</time>" +
+          promptBlock +
           '<p class="recent-entry-text">' + text + "</p>" +
           "</article>"
         );
@@ -84,7 +89,10 @@
     fetch("/journal", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entry: value })
+      body: JSON.stringify({
+        entry: value,
+        prompt: (promptEl.textContent || "").trim() || undefined
+      })
     })
       .then(function (res) {
         if (!res.ok) throw new Error("Request failed");

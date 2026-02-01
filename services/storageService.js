@@ -31,10 +31,11 @@ function writeToFile() {
 loadFromFile();
 
 module.exports = {
-  addEntry(text) {
+  addEntry(text, prompt) {
     entries.push({
       text,
-      timestamp: new Date()
+      timestamp: new Date(),
+      prompt: prompt != null ? prompt : null
     });
     writeToFile();
   },

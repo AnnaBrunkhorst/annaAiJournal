@@ -11,13 +11,13 @@ router.get("/prompt", async (req, res) => {
   });  
 
 router.post("/", async (req, res) => {
-  const { entry } = req.body;
+  const { entry, prompt } = req.body;
 
   if (!entry) {
     return res.status(400).json({ error: "Entry required" });
   }
 
-  storageService.addEntry(entry);
+  storageService.addEntry(entry, prompt);
   const recentEntries = storageService.getRecentEntries(5);
 
   const analysis = await analysisService.analyzeEntry(entry, recentEntries);
