@@ -45,9 +45,10 @@
       });
   }
 
-  function loadPrompt() {
+  function loadPrompt(noContext) {
     promptEl.textContent = "Loading prompt…";
-    fetch("/journal/prompt")
+    const url = noContext ? "/journal/prompt?stub=1" : "/journal/prompt";
+    fetch(url)
       .then(function (res) {
         if (!res.ok) throw new Error("Couldn't load prompt");
         return res.json();
@@ -68,7 +69,7 @@
   });
 
   document.getElementById("stub-prompt").addEventListener("click", function () {
-    // STUB: different implementation coming soon
+    loadPrompt(true);
   });
 
   document.getElementById("clear-entries").addEventListener("click", function () {

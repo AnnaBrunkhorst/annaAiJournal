@@ -5,7 +5,8 @@ const storageService = require("../services/storageService");
 const promptService = require("../services/promptService");
 
 router.get("/prompt", async (req, res) => {
-    const recentEntries = storageService.getRecentEntries(5);
+    const noContext = req.query.stub === "1";
+    const recentEntries = noContext ? [] : storageService.getRecentEntries(5);
     const prompt = await promptService.generatePrompt(recentEntries);
     res.json({ prompt });
   });  
