@@ -1,6 +1,8 @@
 # AI-Powered Journal Companion
 
-A private, empathetic journaling app that helps users overcome "blank page" anxiety and reflect meaningfully on their entries. I built it to run entirely on your machine—journal data and AI prompts stay local—so you can focus on self-reflection without privacy concerns.
+A private, empathetic journaling app that helps users overcome "blank page" anxiety and reflect meaningfully on their entries. I built it to run entirely on your machine (journal data and AI prompts stay local) so you can focus on self-reflection without privacy concerns.
+
+**[Presentation available here](https://youtu.be/mRVovx0IEvE)**
 
 ---
 
